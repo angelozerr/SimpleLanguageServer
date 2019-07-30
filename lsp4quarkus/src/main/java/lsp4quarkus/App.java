@@ -28,6 +28,9 @@ public class App {
     											wrapper);
     	
     	server.setClient(launcher.getRemoteProxy());
+    	
+    	
+    	
     	launcher.startListening();
 	}
 }
