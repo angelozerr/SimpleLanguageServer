@@ -25,10 +25,10 @@ public class QuarkusLanguageServer implements LanguageServer, ProcessLanguageSer
 	private TextDocumentService textDocumentService;
 	private WorkspaceService workspaceService;
 	private Integer parentProcessId;
-	private LanguageClient languageClient;
+	private QuarkusLanguageClient languageClient;
 	
 	public QuarkusLanguageServer() {
-		textDocumentService = new QuarkusTextDocumentService();
+		textDocumentService = new QuarkusTextDocumentService(this);
 		workspaceService = new QuarkusWorkspaceService();
 	}
 
@@ -83,12 +83,12 @@ public class QuarkusLanguageServer implements LanguageServer, ProcessLanguageSer
 		return this.workspaceService;
 	}
 	
-	public LanguageClient getLanguageClient() {
+	public QuarkusLanguageClient getLanguageClient() {
 		return languageClient;
 	}
 	
 	public void setClient(LanguageClient languageClient) {
-		this.languageClient = languageClient;
+		this.languageClient = (QuarkusLanguageClient) languageClient;
 	}
 
 	@Override

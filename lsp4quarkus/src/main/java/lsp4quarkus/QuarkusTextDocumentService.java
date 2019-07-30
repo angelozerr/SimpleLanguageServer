@@ -19,8 +19,10 @@ public class QuarkusTextDocumentService implements TextDocumentService {
 	
 	private static final Logger LOGGER = Logger.getLogger(QuarkusLanguageServer.class.getName());
 
-	public QuarkusTextDocumentService() {
-		LOGGER.info("Text document service instantiated");
+	private final QuarkusLanguageServer quarkusLanguageServer;
+	
+	public QuarkusTextDocumentService(QuarkusLanguageServer quarkusLanguageServer) {
+		this.quarkusLanguageServer = quarkusLanguageServer;
 	}
 	
 	public void didOpen(DidOpenTextDocumentParams params) {
@@ -46,18 +48,31 @@ public class QuarkusTextDocumentService implements TextDocumentService {
 	@Override
 	public CompletableFuture<Either<List<CompletionItem>, CompletionList>> completion(CompletionParams params) {
         LOGGER.info("Inside autocomplete");
-		final List<CompletionItem> completions = new ArrayList<>();
-        return CompletableFuture.supplyAsync(() -> {
-        	completions.add(new CompletionItem("quarkus.option1"));
-        	completions.add(new CompletionItem("quarkus.option2"));
-        	completions.add(new CompletionItem("quarkus.option3"));
-        	completions.add(new CompletionItem("quarkus.option4"));
-        	completions.add(new CompletionItem("quarkus.option5"));
-        	completions.add(new CompletionItem("quarkus.option6"));
-        	completions.add(new CompletionItem("quarkus.option7"));
-        	
+        return quarkusLanguageServer.getLanguageClient().getProperties().thenApplyAsync(properties -> {
+        	final List<CompletionItem> completions = new ArrayList<>();
+        	for (ExtendedConfigDescriptionBuildItem property : properties) {
+				completions.add(new CompletionItem(property.getPropertyName()));
+			}
         	return Either.forLeft(completions);
         });
+//        
+//        
+//		final List<CompletionItem> completions = new ArrayList<>();
+//        return CompletableFuture.supplyAsync(() -> {
+//        	// TODO: check the project is a Quarkus project
+//        	// TODO: store in cache properties
+//        	
+//        	
+//        	completions.add(new CompletionItem("quarkus.option1"));
+//        	completions.add(new CompletionItem("quarkus.option2"));
+//        	completions.add(new CompletionItem("quarkus.option3"));
+//        	completions.add(new CompletionItem("quarkus.option4"));
+//        	completions.add(new CompletionItem("quarkus.option5"));
+//        	completions.add(new CompletionItem("quarkus.option6"));
+//        	completions.add(new CompletionItem("quarkus.option7"));
+//        	
+//        	return Either.forLeft(completions);
+        //});
 	}
 
 }
