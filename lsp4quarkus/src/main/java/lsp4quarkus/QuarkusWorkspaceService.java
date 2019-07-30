@@ -33,6 +33,7 @@ public class QuarkusWorkspaceService implements WorkspaceService {
     	
         return CompletableFuture.supplyAsync(() -> {
         	return "Return value for executeCommand()";
+
         });
     }
 
